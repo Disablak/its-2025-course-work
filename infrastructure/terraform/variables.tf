@@ -8,8 +8,18 @@ variable "env" {
   default = "dev"
 }
 
+variable "instance_type" {
+  type = string
+  default = "t2.micro"
+}
+
+variable "ami" {
+  type = string
+  default = "ami-08a6efd148b1f7504"
+}
+
 variable "public_subnet_cidrs" {
-  default = ["10.0.1.0/24"]
+  default = ["10.0.1.0/24", "10.0.2.0/24"]
 }
 
 variable "private_subnet_cidrs" {
