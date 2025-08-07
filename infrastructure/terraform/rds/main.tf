@@ -13,6 +13,8 @@ module "rds" {
 
   db_name              = "wordpress"
   username             = "admin"
+
+  manage_master_user_password = false
   password             = "disablak" // hide
 
   create_db_subnet_group = true
@@ -36,17 +38,6 @@ resource "aws_security_group" "rds" {
   name        = "rds-sg"
   description = "Allow DB access"
   vpc_id      = var.vpc_id
-
-  ingress {
-    description = "MySQL from EC2"
-    from_port   = 3306
-    to_port     = 3306
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-
-    # NEED ACCESS ONLY FROM EC2 SECURITY GROUP
-    #security_groups = [aws_security_group.ec2_sg.id] 
-  }
 
   egress {
     from_port   = 0
