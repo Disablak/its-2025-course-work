@@ -16,6 +16,14 @@ dependency "vpc" {
   }
 }
 
+dependency "rds" {
+  config_path = "../rds"
+
+  mock_outputs = {
+    rds_security_group_id = "sec_group"
+  }
+}
+
 inputs = {
   env = "dev"
 
@@ -23,4 +31,6 @@ inputs = {
   public_subnet_ids = dependency.vpc.outputs.public_subnet_ids
   #subnet_ids_for_web = dependency.vpc.outputs.subnet_ids_for_web
   subnet_ids_for_web = [dependency.vpc.outputs.private_subnet_ids[0], dependency.vpc.outputs.private_subnet_ids[1]]
+  
+  rds_security_group_id = dependency.rds.outputs.rds_security_group_id
 }
