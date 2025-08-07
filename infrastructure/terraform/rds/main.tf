@@ -1,0 +1,57 @@
+module "rds" {
+  source  = "terraform-aws-modules/rds/aws"
+
+  identifier = "wordpress-db"
+
+  engine               = "mysql"
+  engine_version       = "8.0"
+  instance_class       = "db.t4g.micro"
+  allocated_storage    = 20
+  storage_type         = "gp2"
+  multi_az             = true
+  publicly_accessible  = false
+
+  db_name              = "wordpress"
+  username             = "admin"
+  password             = "disablak" // hide
+
+  create_db_subnet_group = true
+  subnet_ids             = var.subnet_ids_for_rds
+
+  vpc_security_group_ids = [aws_security_group.rds.id]
+
+  backup_retention_period = 7
+  skip_final_snapshot     = true
+
+  family = "mysql8.0"
+  major_engine_version = "8.0"
+
+  tags = {
+    Environment = "dev"
+    Name        = "mysql-rds"
+  }
+}
+
+resource "aws_security_group" "rds" {
+  name        = "rds-sg"
+  description = "Allow DB access"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    description = "MySQL from EC2"
+    from_port   = 3306
+    to_port     = 3306
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+
+    # NEED ACCESS ONLY FROM EC2 SECURITY GROUP
+    #security_groups = [aws_security_group.ec2_sg.id] 
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
