@@ -16,7 +16,7 @@ resource "aws_security_group" "efs_sg" {
     from_port   = 2049
     to_port     = 2049
     protocol    = "tcp"
-    security_groups = [aws_security_group.allow_http_and_ssh.id]
+    security_groups = [aws_security_group.allow_http_and_ssh.id, aws_security_group.bastion_sg.id]
   }
 
   egress {

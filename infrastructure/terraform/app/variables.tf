@@ -15,13 +15,13 @@ variable "instance_type" {
 
 variable "ami" {
   type = string
-  default = "ami-08a6efd148b1f7504"
+  default = "ami-0cc3e99c2bf9814be"
 }
 
-variable "public_key" {
+variable "public_key_name" {
   type        = string
-  description = "SSH public key to login into EC2 instance"
-  default     = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDQyBc2y0+lf5P5r+TqOqihPoJsp0she5qcSXoGJ+XAov59LGfSeTabaDKXC9R2Jw04xNNy3B6vQvKVXpqZWyz7kRumKDhu2rJiS3zjWBP1wcGyNIFdi2frzqdLeQG4EN8WjPuQOh86N1QhAbhnVD4WnHgNRVwH62ll101JHpcYdNoHRnBAzAlsUXx1/l3QajywR29MxW03fgaiLyJRgngzWGdnsdkmrcYde2ZceUEXEgXHITXogUqVgy2E3nr/TcrMehwlHk1XN1b29QzHA5p+rOINMyWFBdNeVfpA1VL5NAKgaiABRZeMUsPkaLlEt09TfCWuw9TlXNOJRc44FcRZ key-us-east-1"
+  description = "SSH public key name to login into EC2 instance"
+  default     = "key-us-east-1"
 }
 
 variable "vpc_id" {
@@ -38,4 +38,9 @@ variable "subnet_ids_for_web" {
 
 variable "rds_security_group_id" {
   type = string
+}
+
+variable "admin_ip" {
+  type = string
+  default = "141.138.97.234/32"
 }

@@ -27,10 +27,11 @@ dependency "rds" {
 inputs = {
   env = "dev"
 
+  admin_ip = "141.138.97.234/32"
+
   vpc_id = dependency.vpc.outputs.vpc_id
   public_subnet_ids = dependency.vpc.outputs.public_subnet_ids
-  #subnet_ids_for_web = dependency.vpc.outputs.subnet_ids_for_web
-  subnet_ids_for_web = [dependency.vpc.outputs.private_subnet_ids[0], dependency.vpc.outputs.private_subnet_ids[1]]
+  subnet_ids_for_web = dependency.vpc.outputs.subnet_ids_for_web
   
   rds_security_group_id = dependency.rds.outputs.rds_security_group_id
 }
