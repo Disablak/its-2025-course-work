@@ -6,6 +6,10 @@ output "efs_id" {
   value = aws_efs_file_system.wordpress.id
 }
 
+output "efs_ap_id" {
+  value = aws_efs_access_point.wordpress_ap.id
+}
+
 data "aws_instances" "asg_instances" {
   filter {
     name   = "tag:Name"
@@ -23,7 +27,8 @@ resource "local_file" "inventory" {
     web_ips = data.aws_instances.asg_instances.private_ips,
     bastion_ip = aws_instance.bastion.public_ip,
     efs_id = aws_efs_file_system.wordpress.id,
-    db_endpoint = "test" # TODO
+    db_endpoint = "test" # TODO,
+    efs_ac_id = aws_efs_access_point.wordpress_ap.id
   })
   filename = "./../../../ansible/inventory"
 }

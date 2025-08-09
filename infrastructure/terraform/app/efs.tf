@@ -27,17 +27,34 @@ resource "aws_security_group" "efs_sg" {
   }
 }
 
-locals {
-  private_subnets_map = {
-    az1 = var.subnet_ids_for_web[0]
-    az2 = var.subnet_ids_for_web[1]
-  }
-}
+data "aws_availability_zones" "available" {}
 
 resource "aws_efs_mount_target" "efs_targets" {
-  for_each = local.private_subnets_map // i can't just use toset(module.vpc.private_subnets)
+  for_each = toset(var.subnet_ids_for_web) // local.private_subnets_map // i can't just use toset(var.subnet_ids_for_web)
 
   file_system_id  = aws_efs_file_system.wordpress.id
   subnet_id       = each.value
   security_groups = [aws_security_group.efs_sg.id]
+}
+
+resource "aws_efs_access_point" "wordpress_ap" {
+  file_system_id = aws_efs_file_system.wordpress.id
+
+  posix_user {
+    gid = 48   # apache
+    uid = 48   # apache
+  }
+
+  root_directory {
+    path = "/var/www/html"
+    creation_info {
+      owner_gid   = 48
+      owner_uid   = 48
+      permissions = "755"
+    }
+  }
+
+  tags = {
+    Name = "wordpress-ap"
+  }
 }

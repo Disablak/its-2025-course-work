@@ -1,8 +1,15 @@
 - name: Deploy wordpress
-  hosts: web
+  hosts: bastion
   become: true
   vars:
-    mysql_user: admin
-    mysql_password: disablak
+    wp_salts: |
+      define('AUTH_KEY',         '}TY<hd!*h{,+gx&^BzA=H#BaR0oD7~b_kr>~E}x.+,-q`>9]pAz/BnlWS8|M;Ys8');
+      define('SECURE_AUTH_KEY',  '?=xGPTS4.8j)>LqW$HMJ+Nx{f$b=`%P]g2+nm3q|%M^, ).--_&7t0Hc_pMJ=SOb');
+      define('LOGGED_IN_KEY',    '43Y51e]Hc+~h8G-W~H$@f@[4T}dJk|zG_8$i(LJ(%+PA77v,7gAlI:d_35DYD&QC');
+      define('NONCE_KEY',        '{8v*wHK*iV0cw}cN.?j-OC>UkqhM#dH_i97wDYG2:8,f!tms7WG<^=L05JFT.>K=');
+      define('AUTH_SALT',        '~%~^^dF$5RgWWOAFWu g/8;f$B->0!b:%Z,S13wv dBO(0tZSLATwXW,$OP l-E|');
+      define('SECURE_AUTH_SALT', '+R>mB#q_{T9g(UaHK)_l+/$bIWc_n} ~2Un3*,~JV+zGpKb+2Iu<z#@|A[HrrgL+');
+      define('LOGGED_IN_SALT',   'XS8Z7&0sWOcKCJ5*Y6OtWKt9c>a(9+(N&Bj +z$jDs;_eM-SIlb%E%<j8%ACml_|');
+      define('NONCE_SALT',       'v0T$HA}<al(fVoFYiu[u7z<4Y&UZnV7 f0I+`I^|2^,U!LK?vhF#y)b6#Vpz@pJ5');
   roles:
     - role: deploy

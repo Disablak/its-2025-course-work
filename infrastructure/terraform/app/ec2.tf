@@ -62,7 +62,17 @@ resource "aws_security_group_rule" "rule_for_rds_sg" {
   protocol          = "tcp"
   source_security_group_id = aws_security_group.allow_http_and_ssh.id
   security_group_id = var.rds_security_group_id
-  description = "Allow access to RDS from EC2"
+  description = "Allow access to RDS from Web"
+}
+
+resource "aws_security_group_rule" "access_from_bastion_to_rds" {
+  type              = "ingress"
+  from_port         = 3306
+  to_port           = 3306
+  protocol          = "tcp"
+  source_security_group_id = aws_security_group.bastion_sg.id
+  security_group_id = var.rds_security_group_id
+  description = "Allow access to RDS from Bastion"
 }
 
 resource "aws_iam_role" "ssm_role" {

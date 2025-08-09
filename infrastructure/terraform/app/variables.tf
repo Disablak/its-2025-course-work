@@ -15,7 +15,6 @@ variable "instance_type" {
 
 variable "ami" {
   type = string
-  default = "ami-0cc3e99c2bf9814be"
 }
 
 variable "public_key_name" {

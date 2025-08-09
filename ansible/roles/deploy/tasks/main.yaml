@@ -1,23 +1,23 @@
-- name: Install Python3 and python3-pip on Amazon Linux 2023
-  ansible.builtin.dnf:
-    name:
-      - python3
-      - python3-pip
-    state: present
-    update_cache: true
+# - name: Install Python3 and python3-pip on Amazon Linux 2023
+#   ansible.builtin.dnf:
+#     name:
+#       - python3
+#       - python3-pip
+#     state: present
+#     update_cache: true
 
-- name: Install PyMySQL via pip3
-  ansible.builtin.pip:
-    name: PyMySQL
-    executable: pip3
+# - name: Install PyMySQL via pip3
+#   ansible.builtin.pip:
+#     name: PyMySQL
+#     executable: pip3
 
 - name: Check connection to MySQL and database
   community.mysql.mysql_db:
     name: wordpress
     state: present
-    login_user: "{{ mysql_user }}"
-    login_password: "{{ mysql_password }}"
-    login_host: "{{ db_endpoint }}"
+    login_user: "{{ db_user }}"
+    login_password: "{{ db_password }}"
+    login_host: "{{ db_host }}"
 
 - name: Create MySQL user 'wordpress' with password and grant privileges
   community.mysql.mysql_user:
@@ -25,11 +25,41 @@
     password: "wordpress@pass"
     priv: "wordpress.*:ALL"
     state: present
-    login_user: "{{ mysql_user }}"
-    login_password: "{{ mysql_password }}"
-    login_host: "{{ db_endpoint }}"
+    login_user: "{{ db_user }}"
+    login_password: "{{ db_password }}"
+    login_host: "{{ db_host }}"
 
-- name: Restart httpd
-  ansible.builtin.service:
-    name: httpd
-    state: restarted
+# - name: Install wget
+#   ansible.builtin.dnf:
+#     name:
+#       - wget
+#     state: present
+#     update_cache: true
+
+- name: Download latest WordPress archive
+  ansible.builtin.get_url:
+    url: https://wordpress.org/latest.tar.gz
+    dest: /tmp/latest.tar.gz
+    mode: '0644'
+
+- name: Extract WordPress archive
+  ansible.builtin.unarchive:
+    src: /tmp/latest.tar.gz
+    dest: /var/www/html
+    remote_src: true
+    extra_opts:
+      - "--strip-components=1" # remove parent folder of archive
+      - "--no-same-owner"
+
+- name: Deploy wp-config.php from template
+  ansible.builtin.template:
+    src: wp-config.php.j2
+    dest: /var/www/html/wp-config.php
+    owner: 48
+    group: 48
+    mode: '0644'
+
+# - name: Restart httpd
+#   ansible.builtin.service:
+#     name: httpd
+#     state: restarted
