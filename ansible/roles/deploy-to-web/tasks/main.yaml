@@ -1,0 +1,12 @@
+- name: Mount EFS volume
+  ansible.builtin.mount:
+    path: /var/www/html
+    src: "{{ efs_id }}"
+    fstype: efs
+    opts: "tls,accesspoint={{ efs_ap_id }}"
+    state: mounted
+
+- name: Restart httpd
+  ansible.builtin.service:
+    name: httpd
+    state: restarted

@@ -27,8 +27,8 @@ resource "local_file" "inventory" {
     web_ips = data.aws_instances.asg_instances.private_ips,
     bastion_ip = aws_instance.bastion.public_ip,
     efs_id = aws_efs_file_system.wordpress.id,
-    db_endpoint = "test" # TODO,
-    efs_ac_id = aws_efs_access_point.wordpress_ap.id
+    efs_ap_id = aws_efs_access_point.wordpress_ap.id,
+    db_endpoint = "test", # TODO take from rds
   })
-  filename = "./../../../ansible/inventory"
+  filename = "${path.root}/../../../ansible/inventory"
 }

@@ -27,7 +27,7 @@ dependency "rds" {
 inputs = {
   env = "dev"
 
-  admin_ip = "141.138.97.234/32"
+  admin_ip = "178.74.208.255/32"
   ami = "ami-0bc4a2b39a519d394"
 
   vpc_id = dependency.vpc.outputs.vpc_id

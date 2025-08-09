@@ -3,6 +3,10 @@ resource "aws_launch_template" "my-app" {
   image_id      = var.ami
   instance_type = var.instance_type
   key_name = var.public_key_name
+  user_data = base64encode(templatefile("${path.module}/userdata.sh.tftpl", { 
+    fsap = aws_efs_access_point.wordpress_ap.id,
+    fs = aws_efs_file_system.wordpress.id
+   }))
 
   network_interfaces {
     security_groups = [aws_security_group.allow_http_and_ssh.id]
