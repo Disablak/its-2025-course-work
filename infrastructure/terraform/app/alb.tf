@@ -44,12 +44,11 @@ resource "aws_lb_target_group" "main" {
   vpc_id   = var.vpc_id
 
   health_check {
-    path                = "/"
+    path                = "/wp-includes/images/blank.gif" // took from here https://serverfault.com/a/959734
     interval            = 30
     timeout             = 5
     healthy_threshold   = 2
     unhealthy_threshold = 2
-    matcher             = "200"
   }
 }
 

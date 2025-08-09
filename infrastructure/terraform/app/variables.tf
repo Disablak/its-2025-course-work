@@ -4,8 +4,7 @@ variable "region" {
 }
 
 variable "env" {
-  type    = string
-  default = "dev"
+  type = string
 }
 
 variable "instance_type" {
@@ -20,7 +19,6 @@ variable "ami" {
 variable "public_key_name" {
   type        = string
   description = "SSH public key name to login into EC2 instance"
-  default     = "key-us-east-1"
 }
 
 variable "vpc_id" {
@@ -41,5 +39,35 @@ variable "rds_security_group_id" {
 
 variable "admin_ip" {
   type = string
-  default = "141.138.97.234/32"
+}
+
+variable "path_to_terragrunt" {
+  type = string
+}
+
+variable "db_name" {
+  type = string
+}
+
+variable "db_user" {
+  type = string
+}
+
+variable "db_password" {
+  type = string
+  sensitive = true
+}
+
+variable "db_host" {
+  type = string
+  default = "wordpress-db.csn682m6ez5x.us-east-1.rds.amazonaws.com"
+}
+
+variable "mysql_user" {
+  type = string
+}
+
+variable "mysql_password" {
+  type = string
+  sensitive = true
 }

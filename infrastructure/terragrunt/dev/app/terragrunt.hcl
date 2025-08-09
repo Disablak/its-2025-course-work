@@ -21,18 +21,19 @@ dependency "rds" {
 
   mock_outputs = {
     rds_security_group_id = "sec_group"
+    db_host = "host"
   }
 }
 
 inputs = {
   env = "dev"
 
-  admin_ip = "178.74.208.255/32"
-  ami = "ami-0bc4a2b39a519d394"
+  path_to_terragrunt = get_parent_terragrunt_dir()
 
   vpc_id = dependency.vpc.outputs.vpc_id
   public_subnet_ids = dependency.vpc.outputs.public_subnet_ids
   subnet_ids_for_web = dependency.vpc.outputs.subnet_ids_for_web
   
   rds_security_group_id = dependency.rds.outputs.rds_security_group_id
+  db_host = dependency.rds.outputs.db_endpoint
 }
