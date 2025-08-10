@@ -45,6 +45,10 @@ variable "path_to_terragrunt" {
   type = string
 }
 
+variable "dns_name" {
+  type = string
+}
+
 variable "db_name" {
   type = string
 }

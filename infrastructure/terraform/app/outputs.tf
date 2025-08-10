@@ -19,6 +19,8 @@ resource "local_file" "inventory" {
     bastion_ip = aws_instance.bastion.public_ip,
     web_ips = data.aws_instances.asg_instances.private_ips,
 
+    dns_name = var.dns_name
+
     efs_id = aws_efs_file_system.wordpress.id,
     efs_ap_id = aws_efs_access_point.wordpress_ap.id,
 
@@ -28,7 +30,7 @@ resource "local_file" "inventory" {
     db_host = var.db_host,
 
     mysql_user = var.mysql_user
-    mysql_password = var.mysql_user
+    mysql_password = var.mysql_password
   })
   filename = "${var.path_to_terragrunt}/../../ansible/inventory"
 }
