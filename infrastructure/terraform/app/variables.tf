@@ -3,6 +3,11 @@ variable "region" {
   default = "us-east-1"
 }
 
+variable "bucket_name_static_content" {
+  type = string
+  default = "disablak-static-content"
+}
+
 variable "env" {
   type = string
 }
