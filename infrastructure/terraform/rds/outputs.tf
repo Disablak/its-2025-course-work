@@ -3,5 +3,5 @@ output "rds_security_group_id" {
 }
 
 output "db_endpoint" {
-  value = module.rds.db_instance_endpoint
+  value = split(":", module.rds.db_instance_endpoint)[0] # Take only endpoint without port
 }

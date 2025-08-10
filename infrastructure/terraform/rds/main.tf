@@ -11,11 +11,11 @@ module "rds" {
   multi_az             = true
   publicly_accessible  = false
 
-  db_name              = "wordpress"
-  username             = "admin"
+  db_name              = var.db_name
+  username             = var.db_user
 
   manage_master_user_password = false
-  password             = "disablak" // hide
+  password             = var.db_password
 
   create_db_subnet_group = true
   subnet_ids             = var.subnet_ids_for_rds
@@ -29,7 +29,7 @@ module "rds" {
   major_engine_version = "8.0"
 
   tags = {
-    Environment = "dev"
+    Environment = var.env
     Name        = "mysql-rds"
   }
 }

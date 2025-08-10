@@ -60,7 +60,6 @@ variable "db_password" {
 
 variable "db_host" {
   type = string
-  default = "wordpress-db.csn682m6ez5x.us-east-1.rds.amazonaws.com"
 }
 
 variable "mysql_user" {
