@@ -25,6 +25,10 @@ dependency "rds" {
   }
 }
 
+dependency "s3-static" {
+  config_path = "../s3-static"
+}
+
 inputs = {
   env = "dev"
 
