@@ -2,9 +2,8 @@ resource "aws_cloudfront_distribution" "cdn" {
   enabled = true
   comment = "CloudFront for ${var.dns_name}"
 
-  # ORIGINS
   origin {
-    domain_name = aws_s3_bucket.static.bucket_regional_domain_name
+    domain_name = data.aws_s3_bucket.static.bucket_regional_domain_name
     origin_id   = "S3-${var.bucket_name_static_content}"
 
     s3_origin_config {
@@ -24,7 +23,6 @@ resource "aws_cloudfront_distribution" "cdn" {
     }
   }
 
-  # DEFAULT BEHAVIOR => forward to ALB (dynamic)
   default_cache_behavior {
     target_origin_id       = "ALB-${aws_lb.main.dns_name}"
     viewer_protocol_policy = "redirect-to-https"
@@ -45,7 +43,6 @@ resource "aws_cloudfront_distribution" "cdn" {
     max_ttl                = 0
   }
 
-  # ORDERED CACHE BEHAVIOR: static content → S3
   ordered_cache_behavior {
     path_pattern           = "wp-content/*"
     target_origin_id       = "S3-${var.bucket_name_static_content}"
@@ -67,7 +64,6 @@ resource "aws_cloudfront_distribution" "cdn" {
     max_ttl     = 31536000
   }
 
-  # also cache wp-includes and uploads via S3
   ordered_cache_behavior {
     path_pattern           = "wp-includes/*"
     target_origin_id       = "S3-${var.bucket_name_static_content}"
@@ -86,13 +82,13 @@ resource "aws_cloudfront_distribution" "cdn" {
     max_ttl     = 31536000
   }
 
-  # LOGGING (optional — disabled by default)
-  # logging_config {
-  #   bucket = "my-cf-logs.s3.amazonaws.com"
-  #   include_cookies = false
-  # }
+  logging_config {
+    bucket = data.aws_s3_bucket.logs.bucket_domain_name
+    prefix = "cdn/"
+    include_cookies = false
+  }
 
-  price_class = "PriceClass_100"
+  price_class = "PriceClass_100" // wat is that?
 
   restrictions {
     geo_restriction {

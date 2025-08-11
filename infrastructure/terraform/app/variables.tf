@@ -5,7 +5,10 @@ variable "region" {
 
 variable "bucket_name_static_content" {
   type = string
-  default = "disablak-static-content"
+}
+
+variable "bucket_name_log" {
+  type = string
 }
 
 variable "env" {

@@ -28,13 +28,22 @@ resource "aws_security_group" "allow_http" {
 }
 
 resource "aws_lb" "main" {
-  name               = "demoapp-alb"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.allow_http.id]
   subnets            = var.public_subnet_ids
-
   enable_deletion_protection = false
+
+  # access_logs {
+  #   bucket  = data.aws_s3_bucket.logs.id
+  #   prefix  = "alb"
+  #   enabled = true
+  # }
+
+  tags = {
+    Name = "Main ALB"
+    Environment = var.env
+  }
 }
 
 resource "aws_lb_target_group" "main" {
@@ -42,6 +51,7 @@ resource "aws_lb_target_group" "main" {
   port     = 80
   protocol = "HTTP"
   vpc_id   = var.vpc_id
+  deregistration_delay = 30
 
   health_check {
     path                = "/wp-includes/images/blank.gif" // took from here https://serverfault.com/a/959734
