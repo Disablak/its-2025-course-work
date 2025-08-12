@@ -4,6 +4,11 @@ resource "aws_launch_template" "my-app" {
   instance_type = var.instance_type
   key_name = var.public_key_name
 
+  user_data = base64encode(templatefile("${path.module}/userdata.sh.tftpl", { 
+    fsap = var.efs_ap_id,
+    fs = var.efs_id
+  }))
+
   network_interfaces {
     security_groups = [aws_security_group.allow_http_and_ssh.id]
   }
@@ -15,6 +20,13 @@ resource "aws_launch_template" "my-app" {
   tags = {
     Name = "my-app"
     Environment = var.env
+  }
+
+  tag_specifications {
+    resource_type = "instance"
+    tags = {
+      Name = "web"
+    }
   }
 }
 
@@ -28,7 +40,7 @@ resource "aws_security_group" "allow_http_and_ssh" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    security_groups = [aws_security_group.bastion_sg.id]
+    security_groups = [var.bastion_sg_id]
   }
 
   ingress {
@@ -65,14 +77,14 @@ resource "aws_security_group_rule" "rule_for_rds_sg" {
   description = "Allow access to RDS from Web"
 }
 
-resource "aws_security_group_rule" "access_from_bastion_to_rds" {
+resource "aws_security_group_rule" "rule_for_efs_sg" {
   type              = "ingress"
-  from_port         = 3306
-  to_port           = 3306
+  from_port         = 2049
+  to_port           = 2049
   protocol          = "tcp"
-  source_security_group_id = aws_security_group.bastion_sg.id
-  security_group_id = var.rds_security_group_id
-  description = "Allow access to RDS from Bastion"
+  source_security_group_id = aws_security_group.allow_http_and_ssh.id
+  security_group_id = var.efs_sg_id
+  description = "Allow access to EFS from Web"
 }
 
 resource "aws_iam_role" "ec2_role" {
@@ -92,7 +104,7 @@ resource "aws_iam_role" "ec2_role" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "ssm_attach" {
+resource "aws_iam_role_policy_attachment" "ssm_attach" { # TODO DELETE
   role       = aws_iam_role.ec2_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
@@ -105,47 +117,4 @@ resource "aws_iam_role_policy_attachment" "cloudwatch_agent_attach" {
 resource "aws_iam_instance_profile" "ssm_profile" {
   name = "ssm-instance-profile"
   role = aws_iam_role.ec2_role.name
-}
-
-
-# BASTION
-resource "aws_instance" "bastion" {
-  ami           = var.ami
-  instance_type = var.instance_type
-  subnet_id     = var.public_subnet_ids[0]
-  key_name      = var.public_key_name
-  vpc_security_group_ids = [aws_security_group.bastion_sg.id]
-  associate_public_ip_address = true
-  iam_instance_profile = aws_iam_instance_profile.ssm_profile.name
-
-  tags = {
-    Name = "bastion"
-    Environment = var.env
-  }
-}
-
-resource "aws_security_group" "bastion_sg" {
-  name        = "bastion-sg"
-  description = "Allow ssh my ip"
-  vpc_id      = var.vpc_id
-  
-  ingress {
-    description = "SSH from my IP"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = [var.admin_ip]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = "bastion-sg"
-    Environment = var.env
-  }
 }

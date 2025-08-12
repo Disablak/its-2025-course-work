@@ -28,6 +28,10 @@ variable "public_key_name" {
   description = "SSH public key name to login into EC2 instance"
 }
 
+variable "dns_name" {
+  type = string
+}
+
 variable "vpc_id" {
   type = string
 }
@@ -44,40 +48,20 @@ variable "rds_security_group_id" {
   type = string
 }
 
-variable "admin_ip" {
+variable "bastion_sg_id" {
   type = string
 }
 
-variable "path_to_terragrunt" {
+variable "efs_sg_id" {
   type = string
 }
 
-variable "dns_name" {
+variable "efs_id" {
   type = string
+  default = "fs-0126fd67ea322d5de" #TODO DELETE
 }
 
-variable "db_name" {
+variable "efs_ap_id" {
   type = string
-}
-
-variable "db_user" {
-  type = string
-}
-
-variable "db_password" {
-  type = string
-  sensitive = true
-}
-
-variable "db_host" {
-  type = string
-}
-
-variable "mysql_user" {
-  type = string
-}
-
-variable "mysql_password" {
-  type = string
-  sensitive = true
+  default = "fsap-0dafa678a770b21db" #TODO DELETE
 }

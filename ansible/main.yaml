@@ -13,10 +13,3 @@
       define('NONCE_SALT',       'v0T$HA}<al(fVoFYiu[u7z<4Y&UZnV7 f0I+`I^|2^,U!LK?vhF#y)b6#Vpz@pJ5');
   roles:
     - role: deploy-to-efs
-
-
-- name: Mount EFS to instances
-  hosts: web
-  become: true
-  roles:
-    - deploy-to-web

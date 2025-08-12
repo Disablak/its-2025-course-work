@@ -7,7 +7,7 @@ include "root" {
 }
 
 dependencies {
-  paths = ["../s3-static", "../vpc", "../rds"]
+  paths = ["../s3-static", "../vpc", "../rds", "../bastion"]
 }
 
 dependency "vpc" {
@@ -29,15 +29,27 @@ dependency "rds" {
   }
 }
 
+dependency "bastion" {
+  config_path = "../bastion"
+
+  mock_outputs = {
+    bastion_sg_id = "mock"
+    efs_sg_id = "mock"
+    efs_id = "mock"
+    efs_ap_id = "mock"
+  }
+}
+
 inputs = {
-  env = "dev"
-
-  path_to_terragrunt = get_parent_terragrunt_dir()
-
   vpc_id = dependency.vpc.outputs.vpc_id
   public_subnet_ids = dependency.vpc.outputs.public_subnet_ids
   subnet_ids_for_web = dependency.vpc.outputs.subnet_ids_for_web
   
   rds_security_group_id = dependency.rds.outputs.rds_security_group_id
   db_host = dependency.rds.outputs.db_endpoint
+
+  bastion_sg_id = dependency.bastion.outputs.bastion_sg_id
+  efs_sg_id = dependency.bastion.outputs.efs_sg_id
+  # efs_id = dependency.bastion.outputs.efs_id # WTFF
+  # efs_ap_id = dependency.bastion.outputs.efs_ap_id
 }

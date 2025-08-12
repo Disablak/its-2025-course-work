@@ -1,11 +1,18 @@
-output "efs_sg_id" {
-  value = aws_security_group.efs_sg.id
-}
-
 output "bastion_sg_id" {
   value = aws_security_group.bastion_sg.id
 }
 
+output "efs_sg_id" {
+  value = aws_security_group.efs_sg.id
+}
+
+output "efs_id" {
+  value = aws_efs_file_system.wordpress.id
+}
+
+output "efs_ap_id" {
+  value = aws_efs_access_point.wordpress_ap.id
+}
 
 resource "local_file" "inventory" {
   content = templatefile("./inventory.tftpl", {
