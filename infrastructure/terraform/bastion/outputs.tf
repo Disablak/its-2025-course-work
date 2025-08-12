@@ -1,0 +1,28 @@
+output "efs_sg_id" {
+  value = aws_security_group.efs_sg.id
+}
+
+output "bastion_sg_id" {
+  value = aws_security_group.bastion_sg.id
+}
+
+
+resource "local_file" "inventory" {
+  content = templatefile("./inventory.tftpl", {
+    bastion_ip = aws_instance.bastion.public_ip,
+
+    dns_name = var.dns_name
+
+    efs_id = aws_efs_file_system.wordpress.id,
+    efs_ap_id = aws_efs_access_point.wordpress_ap.id,
+
+    db_name = var.db_name
+    db_user = var.db_user
+    db_password = var.db_password
+    db_host = var.db_host,
+
+    mysql_user = var.mysql_user
+    mysql_password = var.mysql_password
+  })
+  filename = "${var.path_to_terragrunt}/../../ansible/inventory"
+}
