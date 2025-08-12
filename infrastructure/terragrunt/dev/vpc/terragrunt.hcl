@@ -6,8 +6,8 @@ include "root" {
   path = find_in_parent_folders("root.hcl")
 }
 
-dependency "rds" {
-  config_path = "../s3-logs"
+dependencies {
+  paths = ["../s3-logs"]
 }
 
 inputs = {

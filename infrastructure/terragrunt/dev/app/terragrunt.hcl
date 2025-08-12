@@ -6,6 +6,10 @@ include "root" {
   path = find_in_parent_folders("root.hcl")
 }
 
+dependencies {
+  paths = ["../s3-static", "../vpc", "../rds"]
+}
+
 dependency "vpc" {
   config_path = "../vpc"
 
@@ -23,10 +27,6 @@ dependency "rds" {
     rds_security_group_id = "sec_group"
     db_host = "host"
   }
-}
-
-dependency "s3-static" {
-  config_path = "../s3-static"
 }
 
 inputs = {
