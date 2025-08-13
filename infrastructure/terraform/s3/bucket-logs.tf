@@ -70,7 +70,7 @@ resource "aws_s3_bucket_policy" "allow_logs" {
         Resource = "arn:aws:s3:::${var.bucket_name_log}/cdn/*"
         Condition = {
           StringEquals = {
-            "s3:x-amz-acl"     = "bucket-owner-full-control"
+            "s3:x-amz-acl"      = "bucket-owner-full-control"
             "aws:SourceAccount" = "${data.aws_caller_identity.current.account_id}"
           }
           ArnLike = {

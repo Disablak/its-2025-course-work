@@ -20,15 +20,15 @@ resource "local_file" "inventory" {
 
     dns_name = var.dns_name
 
-    efs_id = aws_efs_file_system.wordpress.id,
+    efs_id    = aws_efs_file_system.wordpress.id,
     efs_ap_id = aws_efs_access_point.wordpress_ap.id,
 
-    db_name = var.db_name
-    db_user = var.db_user
+    db_name     = var.db_name
+    db_user     = var.db_user
     db_password = var.db_password
-    db_host = var.db_host,
+    db_host     = var.db_host,
 
-    mysql_user = var.mysql_user
+    mysql_user     = var.mysql_user
     mysql_password = var.mysql_password
   })
   filename = "${var.path_to_terragrunt}/../../ansible/inventory"

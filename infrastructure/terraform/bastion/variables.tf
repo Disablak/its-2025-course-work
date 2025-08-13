@@ -3,7 +3,7 @@ variable "project_name" {
 }
 
 variable "region" {
-  type    = string
+  type = string
 }
 
 variable "env" {
@@ -61,7 +61,7 @@ variable "db_user" {
 }
 
 variable "db_password" {
-  type = string
+  type      = string
   sensitive = true
 }
 
@@ -74,6 +74,6 @@ variable "mysql_user" {
 }
 
 variable "mysql_password" {
-  type = string
+  type      = string
   sensitive = true
 }

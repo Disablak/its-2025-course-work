@@ -3,7 +3,7 @@ variable "project_name" {
 }
 
 variable "env" {
-  type    = string
+  type = string
 }
 
 variable "public_subnet_cidrs" {

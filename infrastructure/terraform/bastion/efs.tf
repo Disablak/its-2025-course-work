@@ -7,7 +7,7 @@ resource "aws_efs_file_system" "wordpress" {
   encrypted       = "true"
 
   tags = {
-    Name = var.project_name
+    Name        = var.project_name
     Environment = var.env
   }
 }
@@ -38,7 +38,7 @@ resource "aws_efs_access_point" "wordpress_ap" {
   }
 
   tags = {
-    Name = var.project_name
+    Name        = var.project_name
     Environment = var.env
   }
 }
@@ -51,15 +51,15 @@ resource "aws_security_group" "efs_sg" {
   vpc_id = var.vpc_id
 
   ingress {
-    description = "Allow access from bastion"
-    from_port   = 2049
-    to_port     = 2049
-    protocol    = "tcp"
+    description     = "Allow access from bastion"
+    from_port       = 2049
+    to_port         = 2049
+    protocol        = "tcp"
     security_groups = [aws_security_group.bastion_sg.id]
   }
 
   tags = {
-    Name = var.project_name
+    Name        = var.project_name
     Environment = var.env
   }
 }

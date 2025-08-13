@@ -23,7 +23,7 @@ module "vpc" {
   flow_log_traffic_type     = "ALL"
 
   tags = {
-    Name = var.project_name
+    Name        = var.project_name
     Environment = var.env
   }
 }

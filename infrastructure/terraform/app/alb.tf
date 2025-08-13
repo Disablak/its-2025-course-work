@@ -2,24 +2,24 @@
 # ALB
 # ============================================================
 resource "aws_lb" "main" {
-  internal           = true
-  load_balancer_type = "application"
-  security_groups    = [aws_security_group.allow_http.id]
-  subnets            = var.public_subnet_ids
+  internal                   = true
+  load_balancer_type         = "application"
+  security_groups            = [aws_security_group.allow_http.id]
+  subnets                    = var.public_subnet_ids
   enable_deletion_protection = false
   drop_invalid_header_fields = true
 
   tags = {
-    Name = "Main ALB"
+    Name        = "Main ALB"
     Environment = var.env
   }
 }
 
 resource "aws_lb_target_group" "main" {
-  name     = "demoapp-tg"
-  port     = 80
-  protocol = "HTTP"
-  vpc_id   = var.vpc_id
+  name                 = "demoapp-tg"
+  port                 = 80
+  protocol             = "HTTP"
+  vpc_id               = var.vpc_id
   deregistration_delay = 30
 
   health_check {

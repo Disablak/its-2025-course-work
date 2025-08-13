@@ -1,21 +1,21 @@
 module "rds" {
-  source  = "terraform-aws-modules/rds/aws"
+  source = "terraform-aws-modules/rds/aws"
 
   identifier = "wordpress-db"
 
-  engine               = "mysql"
-  engine_version       = "8.0"
-  instance_class       = "db.t4g.micro"
-  allocated_storage    = 20
-  storage_type         = "gp2"
-  multi_az             = true
-  publicly_accessible  = false
+  engine              = "mysql"
+  engine_version      = "8.0"
+  instance_class      = "db.t4g.micro"
+  allocated_storage   = 20
+  storage_type        = "gp2"
+  multi_az            = true
+  publicly_accessible = false
 
-  db_name              = var.db_name
-  username             = var.db_user
+  db_name  = var.db_name
+  username = var.db_user
 
   manage_master_user_password = false
-  password             = var.db_password
+  password                    = var.db_password
 
   create_db_subnet_group = true
   subnet_ids             = var.subnet_ids_for_rds
@@ -25,7 +25,7 @@ module "rds" {
   backup_retention_period = 7
   skip_final_snapshot     = true
 
-  family = "mysql8.0"
+  family               = "mysql8.0"
   major_engine_version = "8.0"
 
   tags = {

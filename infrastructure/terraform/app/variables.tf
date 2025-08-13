@@ -1,5 +1,5 @@
 variable "region" {
-  type    = string
+  type = string
 }
 
 variable "project_name" {
@@ -60,11 +60,11 @@ variable "efs_sg_id" {
 }
 
 variable "efs_id" {
-  type = string
+  type    = string
   default = "fs-0126fd67ea322d5de" #TODO DELETE
 }
 
 variable "efs_ap_id" {
-  type = string
+  type    = string
   default = "fsap-0dafa678a770b21db" #TODO DELETE
 }

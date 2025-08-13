@@ -4,11 +4,11 @@
 resource "aws_launch_template" "my-app" {
   image_id      = var.ami
   instance_type = var.instance_type
-  key_name = var.public_key_name
+  key_name      = var.public_key_name
 
-  user_data = base64encode(templatefile("${path.module}/userdata.sh.tftpl", { 
+  user_data = base64encode(templatefile("${path.module}/userdata.sh.tftpl", {
     fsap = var.efs_ap_id,
-    fs = var.efs_id
+    fs   = var.efs_id
   }))
 
   network_interfaces {
@@ -25,14 +25,14 @@ resource "aws_launch_template" "my-app" {
   }
 
   tags = {
-    Name = var.project_name
+    Name        = var.project_name
     Environment = var.env
   }
 
   tag_specifications {
     resource_type = "instance"
     tags = {
-      Name = "web"
+      Name        = "web"
       Environment = var.env
     }
   }
@@ -47,10 +47,10 @@ resource "aws_security_group" "allow_http_and_ssh" {
   description = "Allow HTTP and SSH"
 
   ingress {
-    description = "Allow SSH from bastion"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
+    description     = "Allow SSH from bastion"
+    from_port       = 22
+    to_port         = 22
+    protocol        = "tcp"
     security_groups = [var.bastion_sg_id]
   }
 
@@ -78,29 +78,29 @@ resource "aws_security_group" "allow_http_and_ssh" {
   }
 
   tags = {
-    Name = var.project_name
+    Name        = var.project_name
     Environment = var.env
   }
 }
 
 resource "aws_security_group_rule" "rule_for_rds_sg" {
-  type              = "ingress"
-  from_port         = 3306
-  to_port           = 3306
-  protocol          = "tcp"
+  type                     = "ingress"
+  from_port                = 3306
+  to_port                  = 3306
+  protocol                 = "tcp"
   source_security_group_id = aws_security_group.allow_http_and_ssh.id
-  security_group_id = var.rds_security_group_id
-  description = "Allow access to RDS from Web"
+  security_group_id        = var.rds_security_group_id
+  description              = "Allow access to RDS from Web"
 }
 
 resource "aws_security_group_rule" "rule_for_efs_sg" {
-  type              = "ingress"
-  from_port         = 2049
-  to_port           = 2049
-  protocol          = "tcp"
+  type                     = "ingress"
+  from_port                = 2049
+  to_port                  = 2049
+  protocol                 = "tcp"
   source_security_group_id = aws_security_group.allow_http_and_ssh.id
-  security_group_id = var.efs_sg_id
-  description = "Allow access to EFS from Web"
+  security_group_id        = var.efs_sg_id
+  description              = "Allow access to EFS from Web"
 }
 
 # ============================================================

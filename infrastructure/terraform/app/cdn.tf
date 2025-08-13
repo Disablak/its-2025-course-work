@@ -1,18 +1,18 @@
 locals {
-  ttl_one_day = 86400
+  ttl_one_day  = 86400
   ttl_one_year = 31536000
 }
 
 resource "aws_cloudfront_distribution" "cdn" {
-  enabled = true
-  comment = "CloudFront for ${var.dns_name}"
+  enabled     = true
+  comment     = "CloudFront for ${var.dns_name}"
   price_class = "PriceClass_100" // least expensive
-  web_acl_id = aws_wafv2_web_acl.main.arn
-  aliases = [var.dns_name]
+  web_acl_id  = aws_wafv2_web_acl.main.arn
+  aliases     = [var.dns_name]
 
-# ============================================================
-# Origins
-# ============================================================
+  # ============================================================
+  # Origins
+  # ============================================================
   origin {
     domain_name = data.aws_s3_bucket.static.bucket_regional_domain_name
     origin_id   = "S3-${var.bucket_name_static_content}"
@@ -34,9 +34,9 @@ resource "aws_cloudfront_distribution" "cdn" {
     }
   }
 
-# ============================================================
-# Behaviours
-# ============================================================
+  # ============================================================
+  # Behaviours
+  # ============================================================
   default_cache_behavior {
     target_origin_id       = "ALB-${aws_lb.main.dns_name}"
     viewer_protocol_policy = "redirect-to-https"
@@ -52,9 +52,9 @@ resource "aws_cloudfront_distribution" "cdn" {
       headers = ["Host", "Authorization"]
     }
 
-    min_ttl                = 0
-    default_ttl            = 0
-    max_ttl                = 0
+    min_ttl     = 0
+    default_ttl = 0
+    max_ttl     = 0
   }
 
   ordered_cache_behavior {
@@ -96,13 +96,13 @@ resource "aws_cloudfront_distribution" "cdn" {
     max_ttl     = local.ttl_one_year
   }
 
-# ============================================================
-# Other settings
-# ============================================================
+  # ============================================================
+  # Other settings
+  # ============================================================
 
   logging_config {
-    bucket = data.aws_s3_bucket.logs.bucket_domain_name
-    prefix = "cdn/"
+    bucket          = data.aws_s3_bucket.logs.bucket_domain_name
+    prefix          = "cdn/"
     include_cookies = false
   }
 
@@ -113,8 +113,8 @@ resource "aws_cloudfront_distribution" "cdn" {
   }
 
   viewer_certificate {
-    acm_certificate_arn = data.aws_acm_certificate.existing_cert.arn
-    ssl_support_method  = "sni-only"
+    acm_certificate_arn      = data.aws_acm_certificate.existing_cert.arn
+    ssl_support_method       = "sni-only"
     minimum_protocol_version = "TLSv1.2_2021"
   }
 }
@@ -155,8 +155,8 @@ resource "aws_security_group" "allow_http" {
 # WAF
 # ============================================================
 resource "aws_wafv2_web_acl" "main" {
-  name        = "waf"
-  scope       = "CLOUDFRONT"
+  name  = "waf"
+  scope = "CLOUDFRONT"
   default_action {
     allow {}
   }

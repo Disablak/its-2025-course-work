@@ -7,8 +7,8 @@ data "aws_route53_zone" "selected" {
 }
 
 data "aws_acm_certificate" "existing_cert" {
-  domain   = var.dns_name
-  statuses = ["ISSUED"]
+  domain      = var.dns_name
+  statuses    = ["ISSUED"]
   most_recent = true
 }
 
@@ -38,7 +38,7 @@ resource "aws_route53_query_log" "dns_logs" {
 }
 
 resource "aws_cloudwatch_log_resource_policy" "route53_logging" {
-  policy_name     = "Route53QueryLoggingPolicy"
+  policy_name = "Route53QueryLoggingPolicy"
   policy_document = jsonencode({
     Version = "2012-10-17"
     Statement = [
