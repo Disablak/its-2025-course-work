@@ -1,7 +1,17 @@
+locals {
+  ttl_one_day = 86400
+  ttl_one_year = 31536000
+}
+
 resource "aws_cloudfront_distribution" "cdn" {
   enabled = true
   comment = "CloudFront for ${var.dns_name}"
+  price_class = "PriceClass_100" // least expensive
+  aliases = [var.dns_name]
 
+# ============================================================
+# Origins
+# ============================================================
   origin {
     domain_name = data.aws_s3_bucket.static.bucket_regional_domain_name
     origin_id   = "S3-${var.bucket_name_static_content}"
@@ -18,11 +28,14 @@ resource "aws_cloudfront_distribution" "cdn" {
     custom_origin_config {
       http_port              = 80
       https_port             = 443
-      origin_protocol_policy = "https-only"    # talk to ALB over HTTPS
+      origin_protocol_policy = "https-only"
       origin_ssl_protocols   = ["TLSv1.2"]
     }
   }
 
+# ============================================================
+# Behaviours
+# ============================================================
   default_cache_behavior {
     target_origin_id       = "ALB-${aws_lb.main.dns_name}"
     viewer_protocol_policy = "redirect-to-https"
@@ -60,8 +73,8 @@ resource "aws_cloudfront_distribution" "cdn" {
     }
 
     min_ttl     = 0
-    default_ttl = 86400   # cache static assets for 1 day (adjust as needed)
-    max_ttl     = 31536000
+    default_ttl = local.ttl_one_day
+    max_ttl     = local.ttl_one_year
   }
 
   ordered_cache_behavior {
@@ -78,17 +91,19 @@ resource "aws_cloudfront_distribution" "cdn" {
       headers = ["Origin"]
     }
     min_ttl     = 0
-    default_ttl = 86400
-    max_ttl     = 31536000
+    default_ttl = local.ttl_one_day
+    max_ttl     = local.ttl_one_year
   }
+
+# ============================================================
+# Other settings
+# ============================================================
 
   logging_config {
     bucket = data.aws_s3_bucket.logs.bucket_domain_name
     prefix = "cdn/"
     include_cookies = false
   }
-
-  price_class = "PriceClass_100" // wat is that?
 
   restrictions {
     geo_restriction {
@@ -101,6 +116,4 @@ resource "aws_cloudfront_distribution" "cdn" {
     ssl_support_method  = "sni-only"
     minimum_protocol_version = "TLSv1.2_2021"
   }
-
-  aliases = [var.dns_name]
 }

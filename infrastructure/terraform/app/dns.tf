@@ -1,3 +1,6 @@
+# ============================================================
+# DNS Register record
+# ============================================================
 data "aws_route53_zone" "selected" {
   name         = var.dns_name
   private_zone = false
@@ -21,6 +24,9 @@ resource "aws_route53_record" "alb" {
   }
 }
 
+# ============================================================
+# DNS logs
+# ============================================================
 resource "aws_cloudwatch_log_group" "route53_logs" {
   name              = "/aws/route53/querylogs"
   retention_in_days = 30

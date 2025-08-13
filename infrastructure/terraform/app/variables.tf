@@ -2,6 +2,10 @@ variable "region" {
   type    = string
 }
 
+variable "project_name" {
+  type = string
+}
+
 variable "bucket_name_static_content" {
   type = string
 }
@@ -16,7 +20,6 @@ variable "env" {
 
 variable "instance_type" {
   type = string
-  default = "t2.micro"
 }
 
 variable "ami" {

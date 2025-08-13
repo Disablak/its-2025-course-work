@@ -23,6 +23,7 @@ module "vpc" {
   single_nat_gateway   = true
 
   tags = {
+    Name = var.project_name
     Environment = var.env
   }
 }

@@ -30,7 +30,7 @@ module "rds" {
 
   tags = {
     Environment = var.env
-    Name        = "mysql-rds"
+    Name        = var.project_name
   }
 }
 

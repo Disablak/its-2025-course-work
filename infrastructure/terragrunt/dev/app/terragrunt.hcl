@@ -50,6 +50,6 @@ inputs = {
 
   bastion_sg_id = dependency.bastion.outputs.bastion_sg_id
   efs_sg_id = dependency.bastion.outputs.efs_sg_id
-  # efs_id = dependency.bastion.outputs.efs_id # WTFF
-  # efs_ap_id = dependency.bastion.outputs.efs_ap_id
+  efs_id = dependency.bastion.outputs.efs_id
+  efs_ap_id = dependency.bastion.outputs.efs_ap_id
 }

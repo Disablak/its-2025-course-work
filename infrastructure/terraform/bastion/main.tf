@@ -1,3 +1,6 @@
+# ============================================================
+# EC2 Instance
+# ============================================================
 resource "aws_instance" "bastion" {
   ami           = var.ami
   instance_type = var.instance_type
@@ -12,6 +15,9 @@ resource "aws_instance" "bastion" {
   }
 }
 
+# ============================================================
+# EC2 security group
+# ============================================================
 resource "aws_security_group" "bastion_sg" {
   name        = "bastion-sg"
   description = "Allow ssh my ip"
@@ -33,7 +39,7 @@ resource "aws_security_group" "bastion_sg" {
   }
 
   tags = {
-    Name = "bastion-sg"
+    Name = var.project_name
     Environment = var.env
   }
 }

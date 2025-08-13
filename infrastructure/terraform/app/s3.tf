@@ -6,6 +6,9 @@ data "aws_s3_bucket" "logs" {
   bucket = var.bucket_name_log
 }
 
+# ============================================================
+# Bucket access from CDN
+# ============================================================
 data "aws_iam_policy_document" "s3_policy" {
   statement {
     sid = "AllowCloudFrontRead"

@@ -1,5 +1,7 @@
+# ============================================================
+# EC2 launch template
+# ============================================================
 resource "aws_launch_template" "my-app" {
-  name_prefix = "web"
   image_id      = var.ami
   instance_type = var.instance_type
   key_name = var.public_key_name
@@ -18,7 +20,7 @@ resource "aws_launch_template" "my-app" {
   }
 
   tags = {
-    Name = "my-app"
+    Name = var.project_name
     Environment = var.env
   }
 
@@ -26,10 +28,14 @@ resource "aws_launch_template" "my-app" {
     resource_type = "instance"
     tags = {
       Name = "web"
+      Environment = var.env
     }
   }
 }
 
+# ============================================================
+# EC2 security groups
+# ============================================================
 resource "aws_security_group" "allow_http_and_ssh" {
   name        = "my-app-sg"
   vpc_id      = var.vpc_id
@@ -87,6 +93,9 @@ resource "aws_security_group_rule" "rule_for_efs_sg" {
   description = "Allow access to EFS from Web"
 }
 
+# ============================================================
+# EC2 IAM role
+# ============================================================
 resource "aws_iam_role" "ec2_role" {
   name = "ec2-role"
 
@@ -102,11 +111,6 @@ resource "aws_iam_role" "ec2_role" {
       }
     ]
   })
-}
-
-resource "aws_iam_role_policy_attachment" "ssm_attach" { # TODO DELETE
-  role       = aws_iam_role.ec2_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
 resource "aws_iam_role_policy_attachment" "cloudwatch_agent_attach" {
