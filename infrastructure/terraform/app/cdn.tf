@@ -99,7 +99,6 @@ resource "aws_cloudfront_distribution" "cdn" {
   # ============================================================
   # Other settings
   # ============================================================
-
   logging_config {
     bucket          = data.aws_s3_bucket.logs.bucket_domain_name
     prefix          = "cdn/"
@@ -116,38 +115,6 @@ resource "aws_cloudfront_distribution" "cdn" {
     acm_certificate_arn      = data.aws_acm_certificate.existing_cert.arn
     ssl_support_method       = "sni-only"
     minimum_protocol_version = "TLSv1.2_2021"
-  }
-}
-
-# ============================================================
-# ALB security group
-# ============================================================
-resource "aws_security_group" "allow_http" {
-  name        = "alb-sg"
-  description = "Allow HTTP"
-  vpc_id      = var.vpc_id
-
-  ingress {
-    description = "Allow HTTP"
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    description = "Allow HTTPS"
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
