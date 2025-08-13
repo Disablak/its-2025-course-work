@@ -32,8 +32,7 @@ build {
   provisioner "shell" {
     inline = [
       "sudo dnf update -y",
-      "sudo dnf install -y httpd php php-mysqli mariadb105 amazon-efs-utils python3 python3-pip amazon-cloudwatch-agent",
-      "sudo pip install PyMySQL"
+      "sudo dnf install -y httpd php php-mysqli mariadb105 amazon-efs-utils amazon-cloudwatch-agent"
     ]
   }
 }

@@ -1,4 +1,4 @@
-- name: Deploy wordpress to EFS
+- name: Deploy wordpress to EFS via Bastion
   hosts: bastion
   become: true
   vars:
@@ -12,4 +12,4 @@
       define('LOGGED_IN_SALT',   'XS8Z7&0sWOcKCJ5*Y6OtWKt9c>a(9+(N&Bj +z$jDs;_eM-SIlb%E%<j8%ACml_|');
       define('NONCE_SALT',       'v0T$HA}<al(fVoFYiu[u7z<4Y&UZnV7 f0I+`I^|2^,U!LK?vhF#y)b6#Vpz@pJ5');
   roles:
-    - role: deploy-to-efs
+    - role: deploy
