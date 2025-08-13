@@ -7,6 +7,15 @@ resource "aws_s3_bucket" "static" {
   }
 }
 
+resource "aws_s3_bucket_public_access_block" "logs" {
+  bucket = aws_s3_bucket.static.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
 resource "aws_s3_bucket_ownership_controls" "static" {
   bucket = aws_s3_bucket.static.id
   rule {

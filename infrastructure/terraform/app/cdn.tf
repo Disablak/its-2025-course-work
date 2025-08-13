@@ -7,6 +7,7 @@ resource "aws_cloudfront_distribution" "cdn" {
   enabled = true
   comment = "CloudFront for ${var.dns_name}"
   price_class = "PriceClass_100" // least expensive
+  web_acl_id = aws_wafv2_web_acl.main.arn
   aliases = [var.dns_name]
 
 # ============================================================
@@ -115,5 +116,71 @@ resource "aws_cloudfront_distribution" "cdn" {
     acm_certificate_arn = data.aws_acm_certificate.existing_cert.arn
     ssl_support_method  = "sni-only"
     minimum_protocol_version = "TLSv1.2_2021"
+  }
+}
+
+# ============================================================
+# ALB security group
+# ============================================================
+resource "aws_security_group" "allow_http" {
+  name        = "alb-sg"
+  description = "Allow HTTP"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    description = "Allow HTTP"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "Allow HTTPS"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+# ============================================================
+# WAF
+# ============================================================
+resource "aws_wafv2_web_acl" "main" {
+  name        = "waf"
+  scope       = "CLOUDFRONT"
+  default_action {
+    allow {}
+  }
+  visibility_config {
+    cloudwatch_metrics_enabled = true
+    metric_name                = "waf"
+    sampled_requests_enabled   = true
+  }
+  rule {
+    name     = "AWS-AWSManagedRulesCommonRuleSet"
+    priority = 1
+    override_action {
+      none {}
+    }
+    statement {
+      managed_rule_group_statement {
+        name        = "AWSManagedRulesCommonRuleSet"
+        vendor_name = "AWS"
+      }
+    }
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "commonRuleSet"
+      sampled_requests_enabled   = true
+    }
   }
 }

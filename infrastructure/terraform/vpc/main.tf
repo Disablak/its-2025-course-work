@@ -1,7 +1,3 @@
-# ============================================================
-# VPC
-# ============================================================
-
 data "aws_availability_zones" "available" {}
 
 locals {
@@ -19,8 +15,12 @@ module "vpc" {
   private_subnets = var.private_subnet_cidrs
   public_subnets  = var.public_subnet_cidrs
 
-  enable_nat_gateway   = true
-  single_nat_gateway   = true
+  enable_nat_gateway = false
+
+  enable_flow_log           = true
+  flow_log_destination_type = "cloud-watch-logs"
+  flow_log_destination_arn  = aws_cloudwatch_log_group.vpc_flow.arn
+  flow_log_traffic_type     = "ALL"
 
   tags = {
     Name = var.project_name
@@ -28,44 +28,7 @@ module "vpc" {
   }
 }
 
-# ============================================================
-# VPC FLOW LOGS
-# ============================================================
-
 resource "aws_cloudwatch_log_group" "vpc_flow" {
   name              = "/aws/vpc/flowlogs"
   retention_in_days = 30
-}
-
-resource "aws_iam_role" "vpc_flow" {
-  name = "vpc-flow-logs-role"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [{
-      Effect    = "Allow"
-      Principal = { Service = "vpc-flow-logs.amazonaws.com" }
-      Action    = "sts:AssumeRole"
-    }]
-  })
-}
-
-resource "aws_iam_role_policy" "vpc_flow" {
-  role = aws_iam_role.vpc_flow.id
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [{
-      Effect   = "Allow"
-      Action   = "logs:*"
-      Resource = "*"
-    }]
-  })
-}
-
-resource "aws_flow_log" "main" {
-  log_destination      = aws_cloudwatch_log_group.vpc_flow.arn
-  iam_role_arn         = aws_iam_role.vpc_flow.arn
-  traffic_type         = "ALL"
-  vpc_id               = module.vpc.vpc_id
 }

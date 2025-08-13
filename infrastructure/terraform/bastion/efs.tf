@@ -2,8 +2,9 @@
 # EFS
 # ============================================================
 resource "aws_efs_file_system" "wordpress" {
-  creation_token = "wordpress-efs"
+  creation_token  = "wordpress-efs"
   throughput_mode = "bursting"
+  encrypted       = "true"
 
   tags = {
     Name = var.project_name
@@ -23,8 +24,8 @@ resource "aws_efs_access_point" "wordpress_ap" {
   file_system_id = aws_efs_file_system.wordpress.id
 
   posix_user {
-    gid = 48   # apache
-    uid = 48   # apache
+    gid = 48 # apache
+    uid = 48 # apache
   }
 
   root_directory {
@@ -50,17 +51,11 @@ resource "aws_security_group" "efs_sg" {
   vpc_id = var.vpc_id
 
   ingress {
+    description = "Allow access from bastion"
     from_port   = 2049
     to_port     = 2049
     protocol    = "tcp"
     security_groups = [aws_security_group.bastion_sg.id]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
   }
 
   tags = {

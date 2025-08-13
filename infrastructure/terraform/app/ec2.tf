@@ -19,6 +19,11 @@ resource "aws_launch_template" "my-app" {
     name = aws_iam_instance_profile.ssm_profile.name
   }
 
+  metadata_options {
+    http_tokens   = "required"
+    http_endpoint = "enabled"
+  }
+
   tags = {
     Name = var.project_name
     Environment = var.env
@@ -70,6 +75,11 @@ resource "aws_security_group" "allow_http_and_ssh" {
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = var.project_name
+    Environment = var.env
   }
 }
 
