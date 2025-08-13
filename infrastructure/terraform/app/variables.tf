@@ -31,6 +31,14 @@ variable "public_key_name" {
   description = "SSH public key name to login into EC2 instance"
 }
 
+variable "min_autoscale_size" {
+  type = number
+}
+
+variable "max_autoscale_size" {
+  type = number
+}
+
 variable "dns_name" {
   type = string
 }

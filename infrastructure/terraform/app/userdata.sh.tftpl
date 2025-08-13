@@ -1,10 +1,16 @@
 #!/bin/bash
+set -e
 
-sudo mount -t efs -o tls,accesspoint=${fsap} ${fs}:/ /var/www/html
-sudo service httpd restart
+# Add EFS mount to fstab
+sudo echo "${fs}:/ /var/www/html efs _netdev,tls,accesspoint=${fsap} 0 0" | sudo tee -a /etc/fstab
+sudo mount -a
 
+# Enable & start Apache
+sudo systemctl enable httpd
+sudo systemctl restart httpd
+
+# Setup and run cloudwatch agent
 mkdir -p /opt/aws/amazon-cloudwatch-agent/bin
-
 cat << 'EOF' > /opt/aws/amazon-cloudwatch-agent/bin/config.json
 {
   "agent": {
