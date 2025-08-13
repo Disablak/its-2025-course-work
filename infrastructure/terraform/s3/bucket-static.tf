@@ -7,7 +7,7 @@ resource "aws_s3_bucket" "static" {
   }
 }
 
-resource "aws_s3_bucket_public_access_block" "logs" {
+resource "aws_s3_bucket_public_access_block" "static" {
   bucket = aws_s3_bucket.static.id
 
   block_public_acls       = true
@@ -23,21 +23,21 @@ resource "aws_s3_bucket_ownership_controls" "static" {
   }
 }
 
-resource "aws_s3_bucket_acl" "main" {
+resource "aws_s3_bucket_acl" "static" {
   depends_on = [aws_s3_bucket_ownership_controls.static]
 
   bucket = aws_s3_bucket.static.id
   acl    = "private"
 }
 
-resource "aws_s3_bucket_versioning" "main" {
+resource "aws_s3_bucket_versioning" "static" {
   bucket = aws_s3_bucket.static.id
   versioning_configuration {
     status = "Enabled"
   }
 }
 
-resource "aws_s3_bucket_server_side_encryption_configuration" "main" {
+resource "aws_s3_bucket_server_side_encryption_configuration" "static" {
   bucket = aws_s3_bucket.static.id
 
   rule {
