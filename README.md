@@ -19,3 +19,5 @@ The reference architecture illustrates a complete best practice deployment for a
 2. Automation. Prepare two Ansible roles: one for preparing an AMI image for app instances, the second we deploy site components to infra.
 
 You need to fork this repo, work with your copy and then create PR to this repo so we can see your commits.
+
+### [Documentation](https://docs.google.com/document/d/1JCv2ayPH5Hc9f3fcNNmOWT8ThjtROTedkKDdKVoIQH0/edit?usp=sharing)
