@@ -16,8 +16,6 @@ dependency "vpc" {
 }
 
 inputs = {
-  env = "dev"
-
   vpc_id = dependency.vpc.outputs.vpc_id
   subnet_ids_for_rds = dependency.vpc.outputs.subnet_ids_for_rds
 }

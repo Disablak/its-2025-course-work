@@ -2,7 +2,8 @@ resource "aws_s3_bucket" "static" {
   bucket = var.bucket_name_static_content
 
   tags = {
-    Name = "${var.bucket_name_static_content}"
+    Name = var.bucket_name_static_content
+    Environment = var.env
   }
 }
 

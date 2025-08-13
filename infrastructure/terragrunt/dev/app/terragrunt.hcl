@@ -7,7 +7,7 @@ include "root" {
 }
 
 dependencies {
-  paths = ["../s3-static", "../vpc", "../rds", "../bastion"]
+  paths = ["../vpc", "../rds", "../bastion"]
 }
 
 dependency "vpc" {

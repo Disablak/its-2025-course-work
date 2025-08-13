@@ -1,3 +1,6 @@
+# ============================================================
+# Local variables
+# ============================================================
 data "aws_instances" "web" {
   filter {
     name   = "tag:Name"
@@ -48,6 +51,9 @@ locals {
   ]
 }
 
+# ============================================================
+# Dashboard
+# ============================================================
 resource "aws_cloudwatch_dashboard" "basic_dashboard" {
   dashboard_name = "disablak-dashboard"
   dashboard_body = jsonencode({
