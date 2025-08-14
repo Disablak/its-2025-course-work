@@ -9,14 +9,20 @@ resource "aws_lb" "main" {
   enable_deletion_protection = false
   drop_invalid_header_fields = true
 
+  access_logs {
+    bucket  = data.aws_s3_bucket.logs.id
+    prefix  = "alb"
+    enabled = true
+  }
+
   tags = {
-    Name        = "Main ALB"
+    Name        = var.project_name
     Environment = var.env
   }
 }
 
 resource "aws_lb_target_group" "main" {
-  name                 = "demoapp-tg"
+  name                 = var.project_name
   port                 = 80
   protocol             = "HTTP"
   vpc_id               = var.vpc_id
