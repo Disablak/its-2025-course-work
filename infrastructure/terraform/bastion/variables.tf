@@ -19,8 +19,7 @@ variable "ami" {
 }
 
 variable "public_key_name" {
-  type        = string
-  description = "SSH public key name to login into EC2 instance"
+  type = string
 }
 
 variable "admin_ip" {
@@ -60,9 +59,8 @@ variable "db_user" {
   type = string
 }
 
-variable "db_password" {
-  type      = string
-  sensitive = true
+variable "db_password_name" {
+  type = string
 }
 
 variable "db_host" {
@@ -73,7 +71,6 @@ variable "mysql_user" {
   type = string
 }
 
-variable "mysql_password" {
-  type      = string
-  sensitive = true
+variable "mysql_password_name" {
+  type = string
 }

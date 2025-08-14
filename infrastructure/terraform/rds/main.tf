@@ -1,3 +1,8 @@
+data "aws_ssm_parameter" "db_password" {
+  name            = var.db_password_name
+  with_decryption = true
+}
+
 module "rds" {
   source = "terraform-aws-modules/rds/aws"
 
@@ -15,7 +20,7 @@ module "rds" {
   username = var.db_user
 
   manage_master_user_password = false
-  password                    = var.db_password
+  password                    = data.aws_ssm_parameter.db_password.value
 
   create_db_subnet_group = true
   subnet_ids             = var.subnet_ids_for_rds

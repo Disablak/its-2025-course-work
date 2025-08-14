@@ -27,8 +27,7 @@ variable "ami" {
 }
 
 variable "public_key_name" {
-  type        = string
-  description = "SSH public key name to login into EC2 instance"
+  type = string
 }
 
 variable "min_autoscale_size" {
@@ -68,11 +67,9 @@ variable "efs_sg_id" {
 }
 
 variable "efs_id" {
-  type    = string
-  default = "fs-0126fd67ea322d5de" #TODO DELETE
+  type = string
 }
 
 variable "efs_ap_id" {
-  type    = string
-  default = "fsap-0dafa678a770b21db" #TODO DELETE
+  type = string
 }

@@ -1,3 +1,20 @@
+- name: Fetch passwords
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Get passwords
+      set_fact:
+        db_password: "{{ lookup('amazon.aws.aws_ssm', db_password_name, decrypt=True) }}"
+        mysql_password: "{{ lookup('amazon.aws.aws_ssm', mysql_password_name, decrypt=True) }}"
+
+    - name: Move passwords to bastion
+      add_host:
+        ansible_user: ec2-user
+        name: "{{ bastion_ip }}"
+        db_password: "{{ db_password }}"
+        mysql_password: "{{ mysql_password }}"
+
+
 - name: Deploy wordpress to EFS via Bastion
   hosts: bastion
   become: true
