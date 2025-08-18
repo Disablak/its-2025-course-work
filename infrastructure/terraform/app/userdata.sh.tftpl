@@ -45,6 +45,11 @@ cat << 'EOF' > /opt/aws/amazon-cloudwatch-agent/bin/config.json
             "file_path": "/var/log/httpd/error_log",
             "log_group_name": "/aws/ec2/apache-error",
             "log_stream_name": "{instance_id}"
+          },
+          {
+            "file_path": "/var/log/php-fpm/www-error.log",
+            "log_group_name": "/aws/ec2/php-fpm-error",
+            "log_stream_name": "{instance_id}"
           }
         ]
       }

@@ -131,6 +131,19 @@ resource "aws_cloudwatch_dashboard" "basic_dashboard" {
           title     = "Apache Access Logs"
           queryType = "Logs"
         }
+      },
+      {
+        type   = "log"
+        x      = 0
+        y      = 18
+        width  = 24
+        height = 6
+        properties = {
+          query     = "SOURCE '/aws/ec2/php-fpm-error'\n| fields @timestamp, @message, @logStream, @log\n| sort @timestamp desc\n| limit 10000"
+          region    = var.region
+          title     = "PHP-FPM Error Logs"
+          queryType = "Logs"
+        }
       }
     ]
   })
