@@ -1,5 +1,6 @@
-## Course work
+# Course work
 
+### Task:
 1. Infrasructure. According to the scheme, spin up the infrastructure using terragrunt.
 
 ![infrasructure diagram](wp.png)
@@ -20,4 +21,5 @@ The reference architecture illustrates a complete best practice deployment for a
 
 You need to fork this repo, work with your copy and then create PR to this repo so we can see your commits.
 
-### [Documentation](https://docs.google.com/document/d/1JCv2ayPH5Hc9f3fcNNmOWT8ThjtROTedkKDdKVoIQH0/edit?usp=sharing)
+### Result:
+[Documentation](https://docs.google.com/document/d/1JCv2ayPH5Hc9f3fcNNmOWT8ThjtROTedkKDdKVoIQH0/edit?usp=sharing)
