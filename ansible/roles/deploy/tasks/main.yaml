@@ -1,0 +1,62 @@
+- name: Install Python packages
+  ansible.builtin.dnf:
+    name:
+      - python3
+      - python3-pip
+    state: present
+    update_cache: true
+
+- name: Install PyMySQL
+  ansible.builtin.pip:
+    name: PyMySQL
+    state: present
+    executable: pip3
+
+- name: Check connection to MySQL and database
+  community.mysql.mysql_db:
+    name: wordpress
+    state: present
+    login_user: "{{ db_user }}"
+    login_password: "{{ db_password }}"
+    login_host: "{{ db_host }}"
+
+- name: Create MySQL user 'wordpress' with password and grant privileges
+  community.mysql.mysql_user:
+    name: "{{ mysql_user }}"
+    password: "{{ mysql_password }}"
+    priv: "wordpress.*:ALL"
+    state: present
+    login_user: "{{ db_user }}"
+    login_password: "{{ db_password }}"
+    login_host: "{{ db_host }}"
+
+- name: Mount EFS volume
+  ansible.builtin.mount:
+    path: /var/www/html
+    src: "{{ efs_id }}"
+    fstype: efs
+    opts: "tls,accesspoint={{ efs_ap_id }}"
+    state: mounted
+
+- name: Download latest WordPress archive
+  ansible.builtin.get_url:
+    url: https://wordpress.org/latest.tar.gz
+    dest: /tmp/latest.tar.gz
+    mode: '0644'
+
+- name: Extract WordPress archive
+  ansible.builtin.unarchive:
+    src: /tmp/latest.tar.gz
+    dest: /var/www/html
+    remote_src: true
+    extra_opts:
+      - "--strip-components=1" # remove parent folder of archive
+      - "--no-same-owner"
+
+- name: Deploy wp-config.php from template
+  ansible.builtin.template:
+    src: wp-config.php.j2
+    dest: /var/www/html/wp-config.php
+    owner: 48
+    group: 48
+    mode: '0644'

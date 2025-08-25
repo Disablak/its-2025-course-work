@@ -1,0 +1,4 @@
+.terra*
+.ansible
+inventory
+*.tfvars

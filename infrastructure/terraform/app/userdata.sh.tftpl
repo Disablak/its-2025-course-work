@@ -1,0 +1,65 @@
+#!/bin/bash
+set -e
+
+# Add EFS mount to fstab
+sudo echo "${fs}:/ /var/www/html efs _netdev,tls,accesspoint=${fsap} 0 0" | sudo tee -a /etc/fstab
+sudo mount -a
+
+# Enable & start Apache
+sudo systemctl enable httpd
+sudo systemctl restart httpd
+
+# Setup and run cloudwatch agent
+mkdir -p /opt/aws/amazon-cloudwatch-agent/bin
+cat << 'EOF' > /opt/aws/amazon-cloudwatch-agent/bin/config.json
+{
+  "agent": {
+    "metrics_collection_interval": 60,
+    "run_as_user": "root"
+  },
+  "metrics": {
+    "append_dimensions": {
+      "InstanceId": "$${aws:InstanceId}"
+    },
+    "metrics_collected": {
+      "cpu": { "measurement": ["cpu_usage_idle", "cpu_usage_system", "cpu_usage_user"], "metrics_collection_interval": 60 },
+      "mem": { "measurement": ["mem_used_percent"], "metrics_collection_interval": 60 },
+      "disk": { "measurement": ["used_percent"], "metrics_collection_interval": 60, "resources": ["*"] }
+    }
+  },
+  "logs": {
+    "logs_collected": {
+      "files": {
+        "collect_list": [
+          {
+            "file_path": "/var/log/messages",
+            "log_group_name": "/aws/ec2/messages",
+            "log_stream_name": "{instance_id}"
+          },
+          {
+            "file_path": "/var/log/httpd/access_log",
+            "log_group_name": "/aws/ec2/apache-access",
+            "log_stream_name": "{instance_id}"
+          },
+          {
+            "file_path": "/var/log/httpd/error_log",
+            "log_group_name": "/aws/ec2/apache-error",
+            "log_stream_name": "{instance_id}"
+          },
+          {
+            "file_path": "/var/log/php-fpm/www-error.log",
+            "log_group_name": "/aws/ec2/php-fpm-error",
+            "log_stream_name": "{instance_id}"
+          }
+        ]
+      }
+    }
+  }
+}
+EOF
+
+/opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
+  -a fetch-config \
+  -m ec2 \
+  -c file:/opt/aws/amazon-cloudwatch-agent/bin/config.json \
+  -s
